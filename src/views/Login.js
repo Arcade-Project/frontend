@@ -19,50 +19,64 @@ class Login extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        firebase
-          .auth()
-          .signInWithEmailAndPassword(values.email, values.password)
-          .then(userCred => {
-            axios
-              .post('/user/login', {
-                email: userCred.user.email
-              })
-              .then(res => {
-                sessionStorage.setItem('auth', true);
-                that.props.dispatch({ type: 'AUTHENTICATION', payload: true });
-                that.props.dispatch({
-                  type: 'SET_USER',
-                  payload: res.data.user
-                });
-                that.setState({redirectProfile: true})
-              })
-              .catch(err => console.log(err));
-
-            firebase
-              .auth()
-              .currentUser.getIdToken(/* forceRefresh */ true)
-              .then(function(idToken) {
-                // Send token to your backend via HTTPS
-                // ...
-                // axios.defaults.headers.common['Authorization'] = idToken;
-              })
-              .catch(function(error) {
-                // Handle error
-              });
-          })
-          .catch(function(error) {
-            // Handle Errors here.
-            console.log(error.code, 'error code');
-            console.log(error.message, 'error message');
-            // ...
-            localStorage.setItem('auth', false);
-            that.props.dispatch({ type: 'AUTHENTICATION', payload: false });
-            that.setState({ error_msg: error.message });
-            that.props.dispatch({
-              type: 'ERROR_MESSAGE',
-              payload: error.message
-            });
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+  .then(function() {
+    // Existing and future Auth states are now persisted in the current
+    // session only. Closing the window would clear any existing state even
+    // if a user forgets to sign out.
+    // ...
+    // New sign-in will be persisted with session persistence.
+    return firebase
+    .auth()
+    .signInWithEmailAndPassword(values.email, values.password)
+    .then(userCred => {
+      axios
+        .post('/user/login', {
+          email: userCred.user.email
+        })
+        .then(res => {
+          sessionStorage.setItem('auth', true);
+          that.props.dispatch({ type: 'AUTHENTICATION', payload: true });
+          that.props.dispatch({
+            type: 'SET_USER',
+            payload: res.data.user
           });
+          that.setState({redirectProfile: true})
+        })
+        .catch(err => console.log(err));
+
+      firebase
+        .auth()
+        .currentUser.getIdToken(/* forceRefresh */ true)
+        .then(function(idToken) {
+          // Send token to your backend via HTTPS
+          // ...
+          // axios.defaults.headers.common['Authorization'] = idToken;
+        })
+        .catch(function(error) {
+          // Handle error
+        });
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      console.log(error.code, 'error code');
+      console.log(error.message, 'error message');
+      // ...
+      localStorage.setItem('auth', false);
+      that.props.dispatch({ type: 'AUTHENTICATION', payload: false });
+      that.setState({ error_msg: error.message });
+      that.props.dispatch({
+        type: 'ERROR_MESSAGE',
+        payload: error.message
+      });
+    });;
+  })
+  .catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+  });
+        
         //console.log('Received values of form: ', values);
       }
     });

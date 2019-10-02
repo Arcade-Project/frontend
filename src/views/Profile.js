@@ -73,7 +73,7 @@ export default function Profile() {
           <Progress
             percent={percentToNextLevel(user.experience)}
             type='circle'
-            format={() => calculateLevel(user.experience)}></Progress>
+            format={() => user.level}></Progress>
         </div>
         <Divider />
         <List
