@@ -28,7 +28,7 @@ function App() {
 
   const update = () => {
     firebase.auth().onAuthStateChanged(authUser => {
-      // console.log(authUser, 'authUser function')
+       console.log(authUser, 'authUser function')
       if (authUser) {
        lookForUser(authUser.email)
         return firebase
@@ -36,9 +36,12 @@ function App() {
           .currentUser.getIdToken()
           .then(idToken => {
             axios.defaults.headers.common['Authorization'] = idToken;
-            localStorage.setItem('token', idToken);
+            sessionStorage.setItem('token', idToken);
           })
           .catch();
+      }else{
+        sessionStorage.setItem('auth', false);
+        dispatch({ type: 'AUTHENTICATION', payload: false });
       }
     });
   };
@@ -49,7 +52,7 @@ function App() {
         email
       })
       .then(res => {
-        localStorage.setItem('auth', true);
+        sessionStorage.setItem('auth', true);
         dispatch({ type: 'AUTHENTICATION', payload: true });
         dispatch({
           type: 'SET_USER',
@@ -59,6 +62,7 @@ function App() {
       .catch(err => console.log(err));
   };
 
+
   return (
     <div className='App'>
       {update()}
@@ -67,13 +71,6 @@ function App() {
           <Sidebar />
           <Layout>
             <Content style={{ margin: '0' }}>
-              <button
-                onClick={() =>
-                  axios.post('/user/test', { text: 'i am testing' })
-                }>
-                TEST
-              </button>
-              <button onClick={() => localStorage.clear()}>LOGOUT</button>
               <Routes />
             </Content>
           </Layout>

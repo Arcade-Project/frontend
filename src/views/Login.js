@@ -28,12 +28,13 @@ class Login extends React.Component {
                 email: userCred.user.email
               })
               .then(res => {
-                localStorage.setItem('auth', true);
+                sessionStorage.setItem('auth', true);
                 that.props.dispatch({ type: 'AUTHENTICATION', payload: true });
                 that.props.dispatch({
                   type: 'SET_USER',
                   payload: res.data.user
                 });
+                that.setState({redirectProfile: true})
               })
               .catch(err => console.log(err));
 

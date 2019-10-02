@@ -27,7 +27,7 @@ export default function Sidebar() {
         </Link>)
       }else{
         return (<Link to="/login">
-        <Icon type='home' style={IconSize} />
+        <Icon type='user-add' style={IconSize} />
         <span>Login</span>
         </Link>)
       }

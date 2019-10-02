@@ -9,7 +9,7 @@ export default function Protection(props) {
 
   useEffect(() => {
     try{
-      const idToken = localStorage.getItem('token');
+      const idToken = sessionStorage.getItem('token');
       axios
         .post('/user/check_login', {
           token: idToken
