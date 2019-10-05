@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Players() {
-  const data = [
+  const dummyData = [
     {
       nickname: 'Diego', level: 1, color: 'black'
     },
@@ -20,7 +20,7 @@ export default function Players() {
     }
   ];
   const { category } = useParams();
-  const [users, setUsers] = useState(data);
+  const [users, setUsers] = useState(dummyData);
   const dispatch = useDispatch();
   dispatch({ type: 'PLAYING', payload: false });
 
