@@ -15,7 +15,7 @@ import {
 } from 'antd';
 import axios from 'axios';
 import { connect } from 'react-redux';
-
+import { Redirect } from 'react-router-dom';
 const { Option } = Select;
 const config = {
   rules: [{ type: 'object', required: true, message: 'Please select time!' }]
@@ -31,7 +31,8 @@ class Register extends React.Component {
     confirmDirty: false,
     data: [],
     value: [],
-    fetching: false
+    fetching: false,
+    redirectLogin: false
   };
 
   componentDidMount() {
@@ -77,7 +78,10 @@ class Register extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         //console.log('Received values of form: ', values);
-        axios.post('/user/register', values);
+        axios
+          .post('/user/register', values)
+          .then(this.setState({ redirectLogin: true }))
+          .catch(err => alert(err));
       }
     });
   };
@@ -145,6 +149,8 @@ class Register extends React.Component {
         <Option value='51'>+51</Option>
       </Select>
     );
+
+    if (this.state.redirectLogin) return <Redirect to='/login' />;
 
     return (
       <Form

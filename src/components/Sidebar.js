@@ -62,19 +62,19 @@ export default function Sidebar() {
               }>
               
               <Menu.Item key='3'>
-              <Link to="/players/top">
+              <Link to="/players/Top">
                 <Icon type='crown' />
                 Top
                 </Link>
               </Menu.Item>
               <Menu.Item key='4'>
-              <Link to="/players/active">
+              <Link to="/players/Active">
                 <Icon type='fire' />
                 Active
                 </Link>
               </Menu.Item>
               <Menu.Item key='5'>
-              <Link to="/players/friends">
+              <Link to="/players/Friends">
                 <Icon type='smile' />
                 Friends</Link>
               </Menu.Item>
