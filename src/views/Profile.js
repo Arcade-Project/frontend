@@ -19,8 +19,19 @@ export default function Profile() {
   const percentToNextLevel = experience =>
     (experience / 50 - calculateLevel(experience)) * 100;
   const user = useSelector(state => state.user.user);
+  const isMobile = useSelector(state => state.app.isMobile)
   const dispatch = useDispatch();
   const [redirectHome, setRedirectHome] = useState(false);
+  dispatch({ type: 'PLAYING', payload: false });
+
+  const calcWidth = () => {
+    if (isMobile){
+      return '80vw'
+    }else {
+      return '20vw'
+    }
+  }
+
   const data = [
     {
       title: 'User Name',
@@ -65,7 +76,7 @@ export default function Profile() {
 
   return (
     <React.Fragment>
-      <Card className='centered-div' style={{ width: '30vw' }}>
+      <Card className='centered-div' style={{width: calcWidth() , height: '80vh', color: 'yellow'}}>
         <div style={{ textAlign: 'center' }}>
           <Typography.Title level={2} style={{ paddingBottom: 35 }}>
             {user.name}

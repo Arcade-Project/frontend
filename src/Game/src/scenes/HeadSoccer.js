@@ -23,8 +23,8 @@ export default class HeadSoccer extends Phaser.Scene {
     this.goal = this.sound.add('goal', { loop: false });
     this.endgame = this.sound.add('endgame', { loop: false });
     this.background = this.add.image(0, 0, 'background');
-    this.background.displayHeight = 600;
-    this.background.displayWidth = 1600;
+    this.background.displayHeight = 800;
+    this.background.displayWidth = 2000;
     this.createScore();
 
     this.playerLeft = this.physics.add.sprite(50, 750, 'playerLeft');

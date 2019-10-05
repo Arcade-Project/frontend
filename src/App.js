@@ -4,9 +4,10 @@ import { Layout } from 'antd';
 import { BrowserRouter } from 'react-router-dom';
 import Routes from './components/Routes';
 import Sidebar from './components/Sidebar';
+import MenuTop from './components/MenuTop';
 import firebase from 'firebase';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 const { Content } = Layout;
 
 // Your web app's Firebase configuration
@@ -25,12 +26,23 @@ firebase.initializeApp(firebaseConfig);
 
 function App() {
   const dispatch = useDispatch();
+  const isMobile = window.innerWidth < 1024;
+  const isPlaying = useSelector(state => state.app.isPlaying);
+  dispatch({ type: 'MOBILE', payload: isMobile });
+
+  const back_color = isPlaying => {
+    if (isPlaying) {
+      return 'black';
+    } else {
+      return '';
+    }
+  };
 
   const update = () => {
     firebase.auth().onAuthStateChanged(authUser => {
-       console.log(authUser, 'authUser function')
+      console.log(authUser, 'authUser function');
       if (authUser) {
-       lookForUser(authUser.email)
+        lookForUser(authUser.email);
         return firebase
           .auth()
           .currentUser.getIdToken()
@@ -39,14 +51,14 @@ function App() {
             sessionStorage.setItem('token', idToken);
           })
           .catch();
-      }else{
+      } else {
         sessionStorage.setItem('auth', false);
         dispatch({ type: 'AUTHENTICATION', payload: false });
       }
     });
   };
 
-  const lookForUser = (email) => {
+  const lookForUser = email => {
     axios
       .post('/user/login', {
         email
@@ -62,15 +74,20 @@ function App() {
       .catch(err => console.log(err));
   };
 
-
   return (
     <div className='App'>
       {update()}
       <BrowserRouter>
         <Layout style={{ minHeight: '100vh' }}>
-          <Sidebar />
+          {isMobile ? <MenuTop /> : <Sidebar />}
           <Layout>
-            <Content style={{ margin: '0' }}>
+            <Content
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: back_color(isPlaying)
+              }}>
               <Routes />
             </Content>
           </Layout>

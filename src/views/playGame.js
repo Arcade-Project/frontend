@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import Game from '../Game/src';
+import React from 'react';
+import GamePhaser from '../Game/src/GamePhaser';
+import { useDispatch } from 'react-redux';
 
-export default class PlayGame extends Component {
-  render() {
-    return <Game />;
-  }
+export default function PlayGame() {
+  const dispatch = useDispatch();
+  dispatch({ type: 'PLAYING', payload: true });
+  return <GamePhaser />;
 }

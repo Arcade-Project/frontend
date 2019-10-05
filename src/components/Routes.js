@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, Switch } from 'react-router-dom';
 
 import Login from '../views/Login';
-import playGame from '../views/playGame';
+import playGame from '../views/PlayGame';
 import Players from '../views/Players';
 import Profile from '../views/Profile';
 import Register from '../views/Register';

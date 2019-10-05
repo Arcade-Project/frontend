@@ -13,7 +13,8 @@ import {
   DatePicker,
   Spin
 } from 'antd';
-import axios from 'axios'
+import axios from 'axios';
+import { connect } from 'react-redux';
 
 const { Option } = Select;
 const config = {
@@ -32,6 +33,10 @@ class Register extends React.Component {
     value: [],
     fetching: false
   };
+
+  componentDidMount() {
+    this.props.dispatch({ type: 'PLAYING', payload: false });
+  }
 
   fetchCountry = value => {
     this.lastFetchId += 1;
@@ -72,7 +77,7 @@ class Register extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         //console.log('Received values of form: ', values);
-        axios.post('/user/register', values)
+        axios.post('/user/register', values);
       }
     });
   };
@@ -288,5 +293,4 @@ class Register extends React.Component {
 }
 
 const WrappedRegister = Form.create({ name: 'register' })(Register);
-
-export default WrappedRegister;
+export default connect()(WrappedRegister);

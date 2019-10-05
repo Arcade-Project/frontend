@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 export default class ChooseGame extends Phaser.Scene {
   constructor() {
     super({ key: 'ChooseGame' });
+    
   }
 
   preload() {
@@ -12,7 +13,8 @@ export default class ChooseGame extends Phaser.Scene {
   }
 
   create() {
-    var btnPong = this.add.sprite(400, 100, 'Pong');
+    const {width , height} = this.game.config;
+    var btnPong = this.add.sprite(width/2, (height/1) - (height/1.5), 'Pong');
     btnPong.setInteractive();
     btnPong.on(
       'pointerdown',
@@ -21,7 +23,7 @@ export default class ChooseGame extends Phaser.Scene {
       },
       this
     );
-    var btnHead = this.add.sprite(400, 150, 'HeadSoccer');
+    var btnHead = this.add.sprite(width/2, (height/1)- (height/2), 'HeadSoccer');
     btnHead.setInteractive();
     btnHead.on(
       'pointerdown',
@@ -30,7 +32,7 @@ export default class ChooseGame extends Phaser.Scene {
       },
       this
     );
-    var btnHang = this.add.sprite(400, 200, 'HangMan');
+    var btnHang = this.add.sprite(width/2, (height/1) - (height/3), 'HangMan');
     btnHang.setInteractive();
     btnHang.on(
       'pointerdown',

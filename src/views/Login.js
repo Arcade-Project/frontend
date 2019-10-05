@@ -14,6 +14,10 @@ class Login extends React.Component {
     };
   }
 
+  componentDidMount(){
+    this.props.dispatch({type: 'PLAYING', payload: false})
+  }
+
   handleSubmit = e => {
     const that = this;
     e.preventDefault();
