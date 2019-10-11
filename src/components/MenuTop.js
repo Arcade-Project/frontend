@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {Menu, Layout, Icon} from 'antd'
 import {Link} from 'react-router-dom'
 import AvatarWithLevel from './AvatarWithLevel';
@@ -6,14 +6,9 @@ import {useSelector} from 'react-redux'
 const {Header} = Layout;
 const { SubMenu } = Menu;
 
-export default function MenuTop() {
-  const [collapsed, setCollapsed] = useState(false);
+export default function MenuTop() { 
   const user = useSelector(state => state.user.user);
   const auth = useSelector(state => state.auth.isAuthenticated)
-
-  const onCollapse = () => {
-    setCollapsed(!collapsed);
-  };
 
   const IconSize = { fontSize: 24 };
 
