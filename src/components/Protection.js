@@ -15,7 +15,6 @@ export default function Protection(props) {
           token: idToken
         })
         .then(res => {
-          console.log(res)
           if (res.data.verified) {
             setIsProtected(false);
           }
@@ -23,11 +22,9 @@ export default function Protection(props) {
         })
         .catch(error =>  setIsLoading(false));
     }catch(err){
-      console.log(err, 'useEffect Protection')
       setIsLoading(false);
     }
   }, []);
-console.log('isLoading', isLoading)
 
   if (isLoading) {
     return (
@@ -42,7 +39,6 @@ console.log('isLoading', isLoading)
       />
     );
   } else {
-    console.log('isProtected', isProtected)
     if (isProtected) {
       return <Redirect to='/login' />;
     } else {
