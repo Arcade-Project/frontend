@@ -77,8 +77,8 @@ class Login extends React.Component {
   })
   .catch(function(error) {
     // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
+    console.log(error.code);
+    console.log(error.message);
   });
         
         //console.log('Received values of form: ', values);
