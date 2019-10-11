@@ -10,14 +10,6 @@ export default class Game extends Component {
         }
      );
     }
-
-    create(){
-
-    }
-
-    update(){
-
-    }
     
   render() {
     return (
