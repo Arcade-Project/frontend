@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import axios from 'axios';
+import getStore from '../getStore'
 
 export default class HangMan extends Phaser.Scene {
   constructor() {
@@ -27,6 +29,8 @@ export default class HangMan extends Phaser.Scene {
 
   preload() {
     this.load.image('hearth', 'assets/HangMan/corazon.png');
+    getStore.call(this);
+    console.log(this.data.get('store'));
   }
 
   create() {
@@ -217,6 +221,8 @@ export default class HangMan extends Phaser.Scene {
         fontColor: 'white',
         backgroundColor: 'black'
       });
+      axios.post('/score/save', {uid: this.data.get('store').user.user._id, game: 'hangman', score: this.lives * 100})
+      this.scene.pause();
     }
   }
 

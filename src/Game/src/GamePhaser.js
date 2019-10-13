@@ -11,6 +11,7 @@ export default function GamePhaser() {
 
 const isMobile = useSelector(state => state.app.isMobile);
 
+
   const config = {
     width: 900,
     height: 500,
@@ -21,7 +22,8 @@ const isMobile = useSelector(state => state.app.isMobile);
     },
     scene: [
       ChooseGame,Pong,HeadSoccer,HangMan
-    ]}
+    ]
+  }
 
     if (isMobile){
       config.width = 550;
@@ -34,7 +36,6 @@ const isMobile = useSelector(state => state.app.isMobile);
       game.destroy(true,false); //el primero elimina el canvas, el 2do lo descarga en memoria
     }
   }, [config])
-
 
   return (
     <Row type="flex" justify="space-around" align="middle">
