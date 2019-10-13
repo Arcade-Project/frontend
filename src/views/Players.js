@@ -25,7 +25,7 @@ export default function Players() {
   dispatch({ type: 'PLAYING', payload: false });
 
   useEffect(() => {
-    axios.get(`/user/${category}`).then(res =>
+    axios.get(`/user/${category}`, {timeout: 10000}).then(res =>
       setUsers(
         res.data.map(user => {
           return { nickname: user.nickname, level: user.level, color: user.color };

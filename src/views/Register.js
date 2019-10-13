@@ -79,7 +79,7 @@ class Register extends React.Component {
       if (!err) {
         //console.log('Received values of form: ', values);
         axios
-          .post('/user/register', values)
+          .post('/user/register', values, {timeout: 10000})
           .then(this.setState({ redirectLogin: true }))
           .catch(err => alert(err));
       }

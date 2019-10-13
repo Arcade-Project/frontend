@@ -37,7 +37,7 @@ class Login extends React.Component {
       axios
         .post('/user/login', {
           email: userCred.user.email
-        })
+        }, {timeout: 10000})
         .then(res => {
           sessionStorage.setItem('auth', true);
           that.props.dispatch({ type: 'AUTHENTICATION', payload: true });

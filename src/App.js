@@ -62,7 +62,7 @@ function App() {
     axios
       .post('/user/login', {
         email
-      })
+      }, {timeout: 10000})
       .then(res => {
         sessionStorage.setItem('auth', true);
         dispatch({ type: 'AUTHENTICATION', payload: true });

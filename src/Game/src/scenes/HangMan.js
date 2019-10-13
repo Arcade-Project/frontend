@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import axios from 'axios';
-import getStore from '../getStore'
+import getStore from '../getStore';
 
 export default class HangMan extends Phaser.Scene {
   constructor() {
@@ -183,10 +183,11 @@ export default class HangMan extends Phaser.Scene {
   checkLetter(letter) {
     let letterToCheck = letter.toLowerCase();
     if (this.randomWord.includes(letterToCheck)) {
-      let where = this.randomWord.indexOf(letterToCheck);
-      this.secretWord[where] = letterToCheck;
-      where = this.randomWord.lastIndexOf(letterToCheck);
-      this.secretWord[where] = letterToCheck;
+      Array.from(this.randomWord).forEach((element, i) => {
+        if (element === letterToCheck) {
+          this.secretWord[i] = letterToCheck;
+        }
+      });
       this.updateSecretWord();
     } else {
       this.fail(letter);
@@ -221,7 +222,11 @@ export default class HangMan extends Phaser.Scene {
         fontColor: 'white',
         backgroundColor: 'black'
       });
-      axios.post('/score/save', {uid: this.data.get('store').user.user._id, game: 'hangman', score: this.lives * 100})
+      axios.post('/score/save', {
+        uid: this.data.get('store').user.user.uid,
+        game: 'hangman',
+        score: this.lives * 100
+      }, {timeout: 10000});
       this.scene.pause();
     }
   }
