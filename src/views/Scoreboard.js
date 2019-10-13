@@ -30,7 +30,7 @@ export default function Scoreboard() {
   const [scores, setScores] = useState(dummy);
 
   useEffect(()=>{
-          axios.get('/score/high', {timeout: 10000})
+          axios.get('/score/high', {timeout: 100000})
           .then(res => setScores([res.data]))
           .catch(err => console.log('error get score', err))
   },[])
