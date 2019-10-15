@@ -1,11 +1,15 @@
 import moment from "moment"
 
-const userReducer = (state={user:{uuid: 0, nickname:'Newbie', email:'email@email.com', level: 2, experience: 123, color: 'red', phone: '+5491145215965', age: moment()}}, action) => {
+const initialState = {uuid: 0, nickname:'Newbie', email:'email@email.com', level: 2, experience: 123, color: 'red', phone: '+5491145215965', age: moment()};
+
+const userReducer = (state = initialState, action) => {
     switch(action.type){
+        
         case 'SET_USER':
+                console.log('>',action.payload)
             return {
                 ...state,
-                user: action.payload
+                ...action.payload,
             }
         default:
             return state
