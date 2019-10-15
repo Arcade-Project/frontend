@@ -5,9 +5,8 @@ import axios from 'axios';
 
 export default function Scoreboard() {
   const dispatch = useDispatch();
-  const [game, setGame] = useState();
-
   dispatch({ type: 'PLAYING', payload: false });
+  
   const { Option } = Select;
 
   const dummy = [
@@ -24,8 +23,6 @@ export default function Scoreboard() {
   ];
 
   const games = ['Pong', 'HangMan', 'HeadSoccer'];
-
-  console.log(game);
 
   const [scores, setScores] = useState(dummy);
 

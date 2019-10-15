@@ -19,7 +19,8 @@ export default function Routes() {
       <Protection>
       <Route path='/playgame' component={PlayGame} />
       <Route path='/players/:category' component={Players} />
-      <Route path='/profile' component={Profile} />
+      <Route exact path='/profile/' component={Profile} />
+      <Route path='/profile/:id' component={Profile} />
       <Route path='/scoreboard' component={Scoreboard} />
       <Route path='/settings' component={Settings} />
       </Protection>
