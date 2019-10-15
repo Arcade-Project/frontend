@@ -1,4 +1,4 @@
-const profileReducer = (state, action) => {
+const profileReducer = (state={}, action) => {
   switch (action.type) {
     case 'FRIENDS':
       return {

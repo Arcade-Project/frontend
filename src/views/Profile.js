@@ -19,6 +19,7 @@ export default function Profile() {
   const percentToNextLevel = experience => (experience / 50 - calculateLevel(experience)) * 100;
   const {user, app, profile} = useSelector(state=>state);
   const {pending, areFriends} = profile;
+  const redux_user = user.user;
   const isMobile = app.isMobile;
   const dispatch = useDispatch();
   const { id } = useParams()
@@ -26,14 +27,14 @@ export default function Profile() {
   const [selfProfile] = useState(!id);
 
   useEffect(()=>{
-    if(selfProfile){
+    if(!selfProfile){
       axios.post('/user/profile', {id})
     .then(res => console.log(res))
     .catch(err => console.log(err, 'error fetch profile'));
     }
   },[id,selfProfile]);
 
-  dispatch({ type: 'PLAYING', payload: false });
+  //dispatch({ type: 'PLAYING', payload: false });
 
   const calcWidth = () => {
     if (isMobile) {
@@ -43,26 +44,28 @@ export default function Profile() {
     }
   };
 
+  console.log(redux_user)
+
   const data = [
     {
       title: 'User Name',
       icon: 'user',
-      info: user.nickname
+      info: redux_user.nickname
     },
     {
       title: 'Email',
       icon: 'mail',
-      info: user.email
+      info: redux_user.email
     },
     {
       title: 'Birthday',
       icon: 'calendar',
-      info: moment(user.age).format('D/MM/YYYY')
+      info: moment(redux_user.age).format('D/MM/YYYY')
     },
     {
       title: 'Phone',
       icon: 'phone',
-      info: user.phone
+      info: redux_user.phone
     }
   ];
 
@@ -83,16 +86,16 @@ export default function Profile() {
   };
 
   const addFriend = () => {
-    axios.post('/user/addFriend', {myid: user.id, friend: id});
+    axios.post('/user/addFriend', {myid: redux_user.uid, friend: id});
   }
   const removeFriend = () => {
-    axios.post('/user/removeFriend', {myid: user.id, friend: id});
+    axios.post('/user/removeFriend', {myid: redux_user.uid, friend: id});
   }
 
   const friendSystem = () => {
     if (areFriends) {
       return (
-        <Button icon='user-delete' onClick={removeFriend()}>
+        <Button icon='user-delete' onClick={removeFriend}>
           Remove Friend
         </Button>
       );
@@ -105,7 +108,7 @@ export default function Profile() {
         );
       } else {
         return (
-          <Button icon='user-add' onClick={addFriend()}>
+          <Button icon='user-add' onClick={addFriend}>
             Add Friend
           </Button>
         );
@@ -115,7 +118,7 @@ export default function Profile() {
 
   const myProfileButtons = (
     <div>
-      <Button icon='poweroff' onClick={() => logOut()}>
+      <Button icon='poweroff' onClick={logOut}>
         Log Out
       </Button>
     </div>
@@ -130,12 +133,12 @@ export default function Profile() {
         style={{ width: calcWidth(), height: '80vh', color: 'yellow' }}>
         <div style={{ textAlign: 'center' }}>
           <Typography.Title level={2} style={{ paddingBottom: 35 }}>
-            {user.name}
+            {redux_user.name}
           </Typography.Title>
           <Progress
             percent={percentToNextLevel(user.experience)}
             type='circle'
-            format={() => user.level}></Progress>
+            format={() => redux_user.level}></Progress>
         </div>
         <div style={{ marginTop: 15, textAlign: 'center' }}>
           {!selfProfile && friendSystem()}
