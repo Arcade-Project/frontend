@@ -40,7 +40,7 @@ function App() {
 
   const update = () => {
     firebase.auth().onAuthStateChanged(authUser => {
-      console.log(authUser, 'authUser function');
+      //console.log(authUser, 'authUser function');
       if (authUser) {
         lookForUser(authUser.email);
         return firebase

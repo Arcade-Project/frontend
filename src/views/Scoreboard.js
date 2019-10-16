@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Table, Select } from 'antd';
 import { useDispatch } from 'react-redux';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 
 export default function Scoreboard() {
@@ -36,7 +37,8 @@ export default function Scoreboard() {
     {
       title: 'Name',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      render: (text, item) => (<Link to={`profile/${item.uid}`}>{text}</Link>),
     },
     {
       title: 'Score',
@@ -51,6 +53,7 @@ export default function Scoreboard() {
           .catch(err => console.log('error get score', err))
   };
 
+  console.log(scores)
   return (
     <React.Fragment>
       <Card className='centered-div' style={{ width: '80vw', height: '75vh' }}>

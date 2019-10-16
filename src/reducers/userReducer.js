@@ -4,9 +4,7 @@ const initialState = {uuid: 0, nickname:'Newbie', email:'email@email.com', level
 
 const userReducer = (state = initialState, action) => {
     switch(action.type){
-        
         case 'SET_USER':
-                console.log('>',action.payload)
             return {
                 ...state,
                 ...action.payload,

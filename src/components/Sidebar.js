@@ -8,7 +8,7 @@ const { SubMenu } = Menu;
 
 export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
-    const user = useSelector(state => state.user.user);
+    const user = useSelector(state => state.user);
     const auth = useSelector(state => state.auth.isAuthenticated)
 
     const onCollapse = () => {

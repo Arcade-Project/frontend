@@ -6,7 +6,8 @@ import {
   List,
   Avatar,
   Divider,
-  Button
+  Button,
+  Spin
 } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -16,23 +17,43 @@ import axios from 'axios';
 
 export default function Profile() {
   const calculateLevel = experience => Math.floor(experience / 50);
-  const percentToNextLevel = experience => (experience / 50 - calculateLevel(experience)) * 100;
-  const {user, app, profile} = useSelector(state=>state);
-  const {pending, areFriends} = profile;
-  const redux_user = user.user;
+  const percentToNextLevel = experience =>
+    (experience / 50 - calculateLevel(experience)) * 100;
+  const { user, app, profile } = useSelector(state => state);
+  const { pending, areFriends, visited, profile_user } = profile;
+  const redux_user = profile_user;
   const isMobile = app.isMobile;
   const dispatch = useDispatch();
-  const { id } = useParams()
+  const { id } = useParams();
   const [redirectHome, setRedirectHome] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selfProfile] = useState(!id);
 
-  useEffect(()=>{
-    if(!selfProfile){
-      axios.post('/user/profile', {id})
-    .then(res => console.log(res))
-    .catch(err => console.log(err, 'error fetch profile'));
+  useEffect(() => {
+   if(id){
+    if (visited.includes(profile => profile.uid === id)) {
+      dispatch({
+        type: 'PROFILE_USER',
+        payload: visited.filter(profile => profile.uid === id)
+      });
+      setLoading(false);
+    } else {
+      setLoading(true);
+      console.log('fetching user profile');
+      axios
+        .post('/user/profile', { id })
+        .then(res => {
+          dispatch({ type: 'PROFILE_USER', payload: res.data});
+          setLoading(false);
+          //dispatch({ type: 'ADD_VISITED_PROFILE', payload: res.data}); loop infinito
+        })
+        .catch(err => console.log(err, 'error fetch profile'));
     }
-  },[id,selfProfile]);
+   }else{
+     dispatch({type: 'PROFILE_USER', payload: user});
+     setLoading(false);
+   }
+  }, [id, visited, user, dispatch]);
 
   //dispatch({ type: 'PLAYING', payload: false });
 
@@ -44,7 +65,7 @@ export default function Profile() {
     }
   };
 
-  console.log(redux_user)
+  if (loading) return <Spin size='large' />;
 
   const data = [
     {
@@ -86,11 +107,11 @@ export default function Profile() {
   };
 
   const addFriend = () => {
-    axios.post('/user/addFriend', {myid: redux_user.uid, friend: id});
-  }
+    axios.post('/user/addFriend', { myid: redux_user.uid, friend: id }).then(res=> {if(res.data.done)dispatch({type:'PENDING', payload: true})});
+  };
   const removeFriend = () => {
-    axios.post('/user/removeFriend', {myid: redux_user.uid, friend: id});
-  }
+    axios.post('/user/removeFriend', { myid: redux_user.uid, friend: id }).then(res=>{if(res.data.done)dispatch({type:'FRIENDS', payload: false})});
+  };
 
   const friendSystem = () => {
     if (areFriends) {
@@ -125,7 +146,7 @@ export default function Profile() {
   );
 
   if (redirectHome) return <Redirect to='/' />;
-
+  
   return (
     <React.Fragment>
       <Card
