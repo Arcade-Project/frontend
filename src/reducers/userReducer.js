@@ -1,6 +1,6 @@
 import moment from "moment"
 
-const initialState = {uuid: 0, nickname:'Newbie', email:'email@email.com', level: 2, experience: 123, color: 'red', phone: '+5491145215965', age: moment()};
+const initialState = {uid: 0, nickname:'Newbie', email:'email@email.com', level: 2, experience: 123, color: 'red', phone: '+5491145215965', age: moment()};
 
 const userReducer = (state = initialState, action) => {
     switch(action.type){

@@ -7,9 +7,9 @@ import Players from '../views/Players';
 import Profile from '../views/Profile';
 import Register from '../views/Register';
 import Scoreboard from '../views/Scoreboard';
-import Settings from '../views/Settings';
+import Notifications from '../views/Notifications';
 import Protection from './Protection';
-
+ 
 export default function Routes() {
   return (
     <Switch>
@@ -22,7 +22,7 @@ export default function Routes() {
       <Route exact path='/profile/' component={Profile} />
       <Route path='/profile/:id' component={Profile} />
       <Route path='/scoreboard' component={Scoreboard} />
-      <Route path='/settings' component={Settings} />
+      <Route path='/notifications' component={Notifications} />
       </Protection>
     </Switch>
   );

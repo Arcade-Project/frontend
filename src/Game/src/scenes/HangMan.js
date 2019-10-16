@@ -223,8 +223,8 @@ export default class HangMan extends Phaser.Scene {
         backgroundColor: 'black'
       });
       axios.post('/score/save', {
-        uid: this.data.get('store').user.user.uid,
-        game: 'hangman',
+        uid: this.data.get('store').user.uid,
+        game: 'HangMan',
         score: this.lives * 100
       }, {timeout: 10000});
       this.scene.pause();

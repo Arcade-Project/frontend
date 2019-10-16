@@ -107,10 +107,10 @@ export default function Profile() {
   };
 
   const addFriend = () => {
-    axios.post('/user/addFriend', { myid: redux_user.uid, friend: id }).then(res=> {if(res.data.done)dispatch({type:'PENDING', payload: true})});
+    axios.post('/user/addFriend', { myid: user.uid, friend: id }).then(res=> {if(res.data.done)dispatch({type:'PENDING', payload: true})});
   };
   const removeFriend = () => {
-    axios.post('/user/removeFriend', { myid: redux_user.uid, friend: id }).then(res=>{if(res.data.done)dispatch({type:'FRIENDS', payload: false})});
+    axios.post('/user/removeFriend', { myid: user.uid, friend: id }).then(res=>{if(res.data.done)dispatch({type:'FRIENDS', payload: false})});
   };
 
   const friendSystem = () => {

@@ -3,6 +3,7 @@ import { Card, Table, Select } from 'antd';
 import { useDispatch } from 'react-redux';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import moment from 'moment';
 
 export default function Scoreboard() {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ export default function Scoreboard() {
 
   useEffect(()=>{
           axios.get('/score/high', {timeout: 100000})
-          .then(res => setScores([res.data]))
+          .then(res => setScores(res.data))
           .catch(err => console.log('error get score', err))
   },[])
 
@@ -44,16 +45,21 @@ export default function Scoreboard() {
       title: 'Score',
       dataIndex: 'score',
       key: 'score'
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
+      render: (text) => moment(text).fromNow()
     }
   ];
 
   const onGameChange = e => {
     axios.post('/score/from_game', {game: e}, {timeout: 10000})
-          .then(res => setScores([res.data]))
+          .then(res => setScores(res.data))
           .catch(err => console.log('error get score', err))
   };
 
-  console.log(scores)
   return (
     <React.Fragment>
       <Card className='centered-div' style={{ width: '80vw', height: '75vh' }}>

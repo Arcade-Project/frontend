@@ -81,9 +81,9 @@ export default function MenuTop() {
           </Menu.Item>
         </SubMenu>
         <Menu.Item key='6'>
-        <Link to="/settings">
-          <Icon type='setting' style={IconSize} />
-          <span>Settings</span>
+        <Link to="/notifications">
+          <Icon type='notification' style={IconSize} />
+          <span>Notifications</span>
           </Link>
         </Menu.Item>
       </Menu>
