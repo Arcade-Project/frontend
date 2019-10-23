@@ -64,7 +64,7 @@ export default function Scoreboard() {
     <React.Fragment>
       <Card className='centered-div' style={{ width: '80vw', height: '75vh' }}>
       <Select defaultValue="" style={{ width: 120 }} onChange={onGameChange}>
-      {games.map(game => <Option value={game}>{game}</Option>)}
+      {games.map((game, index) => <Option key={index} value={game}>{game}</Option>)}
     </Select>
         <Table dataSource={scores} columns={columns} />
       </Card>

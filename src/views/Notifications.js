@@ -6,14 +6,14 @@ import axios from 'axios';
 
 export default function Notifications() {
   const dispatch = useDispatch();
-  const user = useSelector(state=> state.user)
+  const getUid = useSelector(state=> state.user.uid);
   dispatch({ type: 'PLAYING', payload: false });
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
   useEffect(()=>{
     setLoading(true);
-    axios.post('/user/notifications', {uid: user.uid})
+    axios.post('/user/notifications', {uid: getUid})
     .then(res => {
       setNotifications(res.data);
       setLoading(false);
@@ -22,35 +22,18 @@ export default function Notifications() {
       console.log(err)
       setLoading(false);
     })
-  },[user]);
-
-  const data = [
-    {
-      nickname: 'Diego Pronesti',
-    },
-    {
-      nickname: 'Matias Pagano',
-    },
-    {
-      nickname: 'Ant Design nickname 3',
-    },
-    {
-      nickname: 'Ant Design Title 4',
-    },
-  ];
+  },[getUid]);
 
   const acceptFriend = (e) => {
     let which = (e.target.getAttribute('uid'));
-    console.log(user.uid)
-    axios.post('/user/acceptFriend', {myid: user.uid, friend: which}).then().catch();
+    console.log(getUid)
+    axios.post('/user/acceptFriend', {myid: getUid, friend: which}).then().catch();
   }
 
   const declineFriend = (e) => {
     let which = (e.target.getAttribute('uid'));
-    axios.post('/user/declineFriend', {myid: user.uid, friend: which}).then().catch();
+    axios.post('/user/declineFriend', {myid: getUid, friend: which}).then().catch();
   }
-
-
 
   if (loading) return <Spin size="large" />
   return (

@@ -1,4 +1,4 @@
-const initialState = {areFriends: false, pending: false, profile_user: null, visited: []}
+const initialState = {areFriends: false, pending: false, profile_user: {}, visited: []}
 const profileReducer = (state= initialState, action) => {
   switch (action.type) {
     case 'FRIENDS':
@@ -19,7 +19,7 @@ const profileReducer = (state= initialState, action) => {
       case 'ADD_VISITED_PROFILE':
         return {
           ...state,
-          visited: [...state.visited, action.payload]
+          visited: state.visited.concat(action.payload)
         }
     default:
       return state;
