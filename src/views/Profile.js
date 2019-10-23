@@ -31,25 +31,26 @@ export default function Profile() {
 
   useEffect(() => {
    if(id){
-    if (visited.includes(profile => profile.uid === id)) {
       dispatch({
         type: 'PROFILE_USER',
         payload: visited.filter(profile => profile.uid === id)
       });
       setLoading(false);
+      console.log(2)
     } else {
       setLoading(true);
-      console.log('fetching user profile');
+      console.log(3);
       axios
         .post('/user/profile', { id })
         .then(res => {
           dispatch({ type: 'PROFILE_USER', payload: res.data});
           setLoading(false);
-          //dispatch({ type: 'ADD_VISITED_PROFILE', payload: res.data}); loop infinito
+          dispatch({ type: 'ADD_VISITED_PROFILE', payload: res.data}); //loop infinito
         })
         .catch(err => console.log(err, 'error fetch profile'));
     }
    }else{
+     console.log(4)
      dispatch({type: 'PROFILE_USER', payload: user});
      setLoading(false);
    }
