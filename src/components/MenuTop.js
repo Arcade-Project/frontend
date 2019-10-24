@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {Menu, Layout, Icon} from 'antd'
-import {Link} from 'react-router-dom'
+import {Link, useLocation} from 'react-router-dom'
 import AvatarWithLevel from './AvatarWithLevel';
 import {useSelector} from 'react-redux'
 const {Header} = Layout;
@@ -12,7 +12,37 @@ export default function MenuTop() {
   const getLevel = useSelector(state => state.user.level);
   const auth = useSelector(state => state.auth.isAuthenticated)
 
+
+  const where = useLocation();
+  const [selected, setSelected] = useState('home');
+
   const IconSize = { fontSize: 24 };
+
+  useEffect(() => {
+    switch (where.pathname) {
+      case '/':
+        setSelected('home');
+        break;
+      case '/scoreboard':
+        setSelected('scoreboard');
+        break;
+      case '/notifications':
+        setSelected('notifications');
+        break;
+      case '/players/Top':
+        setSelected('top');
+        break;
+      case '/players/Active':
+        setSelected('active');
+        break;
+      case '/players/Friends':
+        setSelected('friends');
+        break;
+      default:
+            setSelected('0');
+            break;
+    }
+  }, [where]);
 
   const renderUser = () => {
     if (auth){
@@ -32,25 +62,24 @@ export default function MenuTop() {
   }
 
     return (
-        <Layout style={{background: 'black', maxHeight: '10vh'}}>
+        <Layout style={{background: '#001529', maxHeight: '10vh'}}>
         <Header >
       <div className="logo" />
       <Menu
         theme="dark"
         mode="horizontal"
-        defaultSelectedKeys={['1']}
         style={{ lineHeight: '10vh' }}
-      >
+        selectedKeys={selected}>
       <Menu.Item key={0} style={{height: '100%'}}>
       {renderUser()}
       </Menu.Item>
-        <Menu.Item key='1'>
+        <Menu.Item key='home'>
         <Link to="/">
           <Icon type='home' style={IconSize} />
           <span>Home</span>
           </Link>
         </Menu.Item>
-        <Menu.Item key='2'>
+        <Menu.Item key='scoreboard'>
         <Link to="/scoreboard">
           <Icon type='ordered-list' style={IconSize} />
           <span>Scoreboards</span>
@@ -65,25 +94,25 @@ export default function MenuTop() {
             </span>
           }>
           
-          <Menu.Item key='3'>
+          <Menu.Item key='top'>
           <Link to="/players/Top">
             <Icon type='crown' />
             Top
             </Link>
           </Menu.Item>
-          <Menu.Item key='4'>
+          <Menu.Item key='active'>
           <Link to="/players/Active">
             <Icon type='fire' />
             Active
             </Link>
           </Menu.Item>
-          <Menu.Item key='5'>
+          <Menu.Item key='friends'>
           <Link to="/players/Friends">
             <Icon type='smile' />
             Friends</Link>
           </Menu.Item>
         </SubMenu>
-        <Menu.Item key='6'>
+        <Menu.Item key='notifications'>
         <Link to="/notifications">
           <Icon type='notification' style={IconSize} />
           <span>Notifications</span>

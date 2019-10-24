@@ -7,9 +7,11 @@ import axios from 'axios';
 export default function Notifications() {
   const dispatch = useDispatch();
   const getUid = useSelector(state=> state.user.uid);
+  const isMobile = useSelector(state=> state.app.isMobile);
   dispatch({ type: 'PLAYING', payload: false });
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
+
 
   useEffect(()=>{
     setLoading(true);
@@ -24,9 +26,16 @@ export default function Notifications() {
     })
   },[getUid]);
 
+  const getWidth = () => {
+    if(isMobile){
+      return '80vw';
+    }else{
+      return '60vw'
+    }
+  }
+
   const acceptFriend = (e) => {
     let which = (e.target.getAttribute('uid'));
-    console.log(getUid)
     axios.post('/user/acceptFriend', {myid: getUid, friend: which}).then().catch();
   }
 
@@ -38,7 +47,7 @@ export default function Notifications() {
   if (loading) return <Spin size="large" />
   return (
     <React.Fragment>
-    <Card style={{width: '60vw', height: '80vh'}}>
+    <Card style={{width: getWidth(), height: '80vh'}}>
       <Typography.Title level={1}>Notifications</Typography.Title>
       <List
       itemLayout="horizontal"

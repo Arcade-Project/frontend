@@ -37,13 +37,14 @@ export default function Players() {
 
   return (
     <React.Fragment>
-      <Card className='centered-div' style={{ width: '80vw', height: '75vh' }}>
+      <Card className='centered-div' style={{ width: '80vw' }}>
         <Typography.Title level={1} style={{ textAlign: 'center' }}>
           {category} Players
         </Typography.Title>
         <List
           itemLayout='horizontal'
           dataSource={users}
+          style={{maxHeight: '100%', overflow: 'auto'}}
           renderItem={item => (
             <List.Item>
               <List.Item.Meta
