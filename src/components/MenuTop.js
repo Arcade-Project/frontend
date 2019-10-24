@@ -7,7 +7,9 @@ const {Header} = Layout;
 const { SubMenu } = Menu;
 
 export default function MenuTop() { 
-  const user = useSelector(state => state.user.user);
+  const getColor = useSelector(state => state.user.user.color);
+  const getNickName = useSelector(state => state.user.user.nickname);
+  const getLevel = useSelector(state => state.user.user.level);
   const auth = useSelector(state => state.auth.isAuthenticated)
 
   const IconSize = { fontSize: 24 };
@@ -16,8 +18,9 @@ export default function MenuTop() {
     if (auth){
       return(<Link to="/profile">
       <AvatarWithLevel
-        level={user.level}
-        user={user}
+        level={getLevel}
+        nickname={getNickName}
+        color={getColor}
       />
       </Link>)
     }else{

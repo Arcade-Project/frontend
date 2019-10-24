@@ -8,7 +8,9 @@ const { SubMenu } = Menu;
 
 export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
-    const user = useSelector(state => state.user);
+    const getColor = useSelector(state => state.user.user.color);
+    const getNickName = useSelector(state => state.user.user.nickname);
+    const getLevel = useSelector(state => state.user.user.level);
     const auth = useSelector(state => state.auth.isAuthenticated)
 
     const onCollapse = () => {
@@ -21,9 +23,10 @@ export default function Sidebar() {
       if (auth){
         return(<Link to="/profile">
         <AvatarWithLevel
-          level={user.level}
-          user={user}
-        />
+        level={getLevel}
+        nickname={getNickName}
+        color={getColor}
+      />
         </Link>)
       }else{
         return (<Link to="/login">
