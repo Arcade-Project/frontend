@@ -7,9 +7,9 @@ const {Header} = Layout;
 const { SubMenu } = Menu;
 
 export default function MenuTop() { 
-  const getColor = useSelector(state => state.user.user.color);
-  const getNickName = useSelector(state => state.user.user.nickname);
-  const getLevel = useSelector(state => state.user.user.level);
+  const getColor = useSelector(state => state.user.color);
+  const getNickName = useSelector(state => state.user.nickname);
+  const getLevel = useSelector(state => state.user.level);
   const auth = useSelector(state => state.auth.isAuthenticated)
 
   const IconSize = { fontSize: 24 };
