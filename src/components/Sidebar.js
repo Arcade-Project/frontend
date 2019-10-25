@@ -3,6 +3,7 @@ import { Menu, Layout, Icon } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import AvatarWithLevel from './AvatarWithLevel';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -11,9 +12,11 @@ export default function Sidebar() {
   const getColor = useSelector(state => state.user.color);
   const getNickName = useSelector(state => state.user.nickname);
   const getLevel = useSelector(state => state.user.level);
+  const getUid = useSelector(state=> state.user.uid);
   const auth = useSelector(state => state.auth.isAuthenticated);
   const where = useLocation();
   const [selected, setSelected] = useState('home');
+  const [notifications, setNotifications] = useState();
 
   const onCollapse = () => {
     setCollapsed(!collapsed);
@@ -47,6 +50,23 @@ export default function Sidebar() {
     }
   }, [where]);
 
+  const lookForNotifications = async () => {
+    console.log(getUid); // no esta leyendo bien la store
+    if(getUid !== 0){
+    await axios.post('/user/notifications', {uid: getUid})
+    .then(res => {
+      setNotifications(res.data);
+    })
+    .catch(err => {
+      console.log(err)
+    });
+  }
+  }
+
+  useEffect(() => {
+  //  const timer = setInterval(() => lookForNotifications(), 10000); //Search for notifications every x seconds
+  }, []);
+
   const topSidebar = () => {
     if (auth) {
       return (
@@ -67,6 +87,8 @@ export default function Sidebar() {
       );
     }
   };
+
+  console.log(notifications)
 
   return (
     <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
