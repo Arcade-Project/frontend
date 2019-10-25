@@ -37,6 +37,7 @@ export default function Profile() {
   const getAge = useSelector(state=>state.profile.profile_user.age);
   const getPhone = useSelector(state=>state.profile.profile_user.phone);
   const getLevel = useSelector(state=>state.profile.profile_user.level);
+  const getUid = useSelector(state=>state.profile.profile_user.uid);
 
   console.log(getVisited)
   
@@ -143,7 +144,7 @@ export default function Profile() {
             Pending
           </Button>
         );
-      } else {
+      } else if(id !== getUid) {
         return (
           <Button icon='user-add' onClick={addFriend}>
             Add Friend
