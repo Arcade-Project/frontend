@@ -11,7 +11,7 @@ export default function Notifications() {
   dispatch({ type: 'PLAYING', payload: false });
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
-
+  const [refresh, setRefresh] = useState([false]);
 
   useEffect(()=>{
     setLoading(true);
@@ -24,7 +24,7 @@ export default function Notifications() {
       console.log(err)
       setLoading(false);
     })
-  },[getUid]);
+  },[getUid,refresh]);
 
   const getWidth = () => {
     if(isMobile){
@@ -37,11 +37,13 @@ export default function Notifications() {
   const acceptFriend = (e) => {
     let which = (e.target.getAttribute('uid'));
     axios.post('/user/acceptFriend', {myid: getUid, friend: which}).then().catch();
+    setRefresh(!refresh);
   }
 
   const declineFriend = (e) => {
     let which = (e.target.getAttribute('uid'));
     axios.post('/user/declineFriend', {myid: getUid, friend: which}).then().catch();
+    setRefresh(!refresh);
   }
 
   if (loading) return <Spin size="large" />

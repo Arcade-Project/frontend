@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, List, Avatar, Typography, Badge } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -22,17 +22,18 @@ export default function Players() {
   const { category } = useParams();
   const [users, setUsers] = useState(dummyData);
   const dispatch = useDispatch();
+  const getUid = useSelector(state=>state.profile.profile_user.uid);
   dispatch({ type: 'PLAYING', payload: false });
 
   useEffect(() => {
-    axios.get(`/user/${category}`, {timeout: 10000}).then(res =>
+    axios.post('/user/players',{category,id: getUid}, {timeout: 10000}).then(res =>
       setUsers(
         res.data.map(user => {
-          return { nickname: user.nickname, level: user.level, color: user.color };
+          return { uid: user.uid, nickname: user.nickname, level: user.level, color: user.color };
         })
       )
     );
-  }, [category]);
+  }, [category, getUid]);
   
 
   return (
@@ -60,7 +61,7 @@ export default function Players() {
                     </Avatar>
                   </Badge>
                 }
-                title={<Link to={"/profile/" + item.nickname}>{item.nickname}</Link>}
+                title={<Link to={"/profile/" + item.uid}>{item.nickname}</Link>}
                 description='Got the highest score on'
               />
             </List.Item>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, Layout, Icon } from 'antd';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Menu, Layout, Icon, Badge } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import AvatarWithLevel from './AvatarWithLevel';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ export default function Sidebar() {
   const auth = useSelector(state => state.auth.isAuthenticated);
   const where = useLocation();
   const [selected, setSelected] = useState('home');
-  const [notifications, setNotifications] = useState();
+  const [notifications, setNotifications] = useState([]);
 
   const onCollapse = () => {
     setCollapsed(!collapsed);
@@ -50,8 +50,7 @@ export default function Sidebar() {
     }
   }, [where]);
 
-  const lookForNotifications = async () => {
-    console.log(getUid); // no esta leyendo bien la store
+  const lookForNotifications = useCallback(async () => {
     if(getUid !== 0){
     await axios.post('/user/notifications', {uid: getUid})
     .then(res => {
@@ -61,11 +60,11 @@ export default function Sidebar() {
       console.log(err)
     });
   }
-  }
+  }, [getUid])
 
   useEffect(() => {
-  //  const timer = setInterval(() => lookForNotifications(), 10000); //Search for notifications every x seconds
-  }, []);
+    if(getUid !== 0) {setInterval(() => lookForNotifications(), 60000);} //Search for notifications every minute
+  }, [getUid, lookForNotifications]);
 
   const topSidebar = () => {
     if (auth) {
@@ -87,8 +86,6 @@ export default function Sidebar() {
       );
     }
   };
-
-  console.log(notifications)
 
   return (
     <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
@@ -142,8 +139,10 @@ export default function Sidebar() {
         </SubMenu>
         <Menu.Item key='notifications'>
           <Link to='/notifications'>
+          <Badge count={notifications.length}>
             <Icon type='notification' style={IconSize} />
             <span>Notifications</span>
+            </Badge>
           </Link>
         </Menu.Item>
       </Menu>
