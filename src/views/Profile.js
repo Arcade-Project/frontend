@@ -16,6 +16,7 @@ import moment from 'moment';
 import firebase from 'firebase';
 import { Redirect, useParams } from 'react-router-dom';
 import axios from 'axios';
+import {checkAreFriends, checkIsPending} from '../selectors/index';
 
 export default function Profile() {
   const calculateLevel = experience => Math.floor(experience / 50);
@@ -87,9 +88,11 @@ export default function Profile() {
   const getRequests = useSelector(state => state.profile.profile_user.requests);
 
   try {
+    //setAreFriends(getFriends.includes(getMyUid));
+    //setIsPending(getRequests.includes(getMyUid));
     //Checkear como hacer mejor esto (RESELECT)
-    setAreFriends(getFriends.includes(getMyUid));
-    setIsPending(getRequests.includes(getMyUid));
+    setAreFriends(checkAreFriends);
+    setIsPending(checkIsPending);
   } catch (err) {
     console.log(err);
   }

@@ -22,7 +22,7 @@ export default function Players() {
   const { category } = useParams();
   const [users, setUsers] = useState(dummyData);
   const dispatch = useDispatch();
-  const getUid = useSelector(state=>state.profile.profile_user.uid);
+  const getUid = useSelector(state => state.user.uid);
   dispatch({ type: 'PLAYING', payload: false });
 
   useEffect(() => {

@@ -3,7 +3,8 @@ import { Form, Icon, Input, Button, Checkbox, Alert } from 'antd';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom';
+import {isAuthenticated, setUser, setErrorMessage} from '../actions';
 
 class Login extends React.Component {
   constructor(props) {
@@ -40,14 +41,11 @@ class Login extends React.Component {
         }, {timeout: 10000})
         .then(res => {
           sessionStorage.setItem('auth', true);
-          that.props.dispatch({ type: 'AUTHENTICATION', payload: true });
-          that.props.dispatch({
-            type: 'SET_USER',
-            payload: res.data.user
-          });
+          that.props.dispatch(isAuthenticated(true));
+          that.props.dispatch(setUser(res.data.user));
           that.setState({redirectProfile: true})
         })
-        .catch(err => console.log(err));
+        .catch(err => setErrorMessage(err));
 
       firebase
         .auth()
@@ -59,6 +57,7 @@ class Login extends React.Component {
         })
         .catch(function(error) {
           // Handle error
+          that.props.dispatch(setErrorMessage(error));
         });
     })
     .catch(function(error) {
@@ -67,20 +66,16 @@ class Login extends React.Component {
       console.log(error.message, 'error message');
       // ...
       localStorage.setItem('auth', false);
-      that.props.dispatch({ type: 'AUTHENTICATION', payload: false });
+      that.props.dispatch(isAuthenticated(false));
       that.setState({ error_msg: error.message });
-      that.props.dispatch({
-        type: 'ERROR_MESSAGE',
-        payload: error.message
-      });
+      that.props.dispatch(setErrorMessage(error.message));
     });;
   })
   .catch(function(error) {
     // Handle Errors here.
     console.log(error.code);
-    console.log(error.message);
-  });
-        
+    that.props.dispatch(setErrorMessage(error.message));
+  }); 
         //console.log('Received values of form: ', values);
       }
     });
