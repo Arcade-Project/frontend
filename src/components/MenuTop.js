@@ -14,32 +14,32 @@ export default function MenuTop() {
 
 
   const where = useLocation();
-  const [selected, setSelected] = useState('home');
+  const [selected, setSelected] = useState(['home']);
 
   const IconSize = { fontSize: 24 };
 
   useEffect(() => {
     switch (where.pathname) {
       case '/':
-        setSelected('home');
+        setSelected(['home']);
         break;
       case '/scoreboard':
-        setSelected('scoreboard');
+        setSelected(['scoreboard']);
         break;
       case '/notifications':
-        setSelected('notifications');
+        setSelected(['notifications']);
         break;
       case '/players/Top':
-        setSelected('top');
+        setSelected(['top']);
         break;
       case '/players/Active':
-        setSelected('active');
+        setSelected(['active']);
         break;
       case '/players/Friends':
-        setSelected('friends');
+        setSelected(['friends']);
         break;
       default:
-            setSelected('0');
+            setSelected(['0']);
             break;
     }
   }, [where]);

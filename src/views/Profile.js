@@ -29,8 +29,23 @@ export default function Profile() {
   const [redirectHome, setRedirectHome] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selfProfile] = useState(!id);
-  const [areFriends, setAreFriends] = useState(false);
-  const [isPending, setIsPending] = useState(false);
+
+  const getNickName = useSelector(state => state.profile.profile_user.nickname);
+  const getEmail = useSelector(state => state.profile.profile_user.email);
+  const getAge = useSelector(state => state.profile.profile_user.age);
+  const getPhone = useSelector(state => state.profile.profile_user.phone);
+  const getLevel = useSelector(state => state.profile.profile_user.level);
+  const getActivity = useSelector(state => state.profile.profile_user.activity);
+  const getMyUid = useSelector(state => state.user.uid);
+
+  const getFriends = useSelector(state => state.profile.profile_user.friends);
+  const getRequests = useSelector(state => state.profile.profile_user.requests);
+  
+  const checkFriend = useSelector(checkAreFriends);
+  const checkPending = useSelector(checkIsPending);
+  
+  const [areFriends, setAreFriends] = useState(checkFriend);
+  const [isPending, setIsPending] = useState(checkPending);
 
   const user = useSelector(state => state.user);
 
@@ -76,26 +91,6 @@ export default function Profile() {
     };
     checkProfile();
   }, [id, getVisited, user, dispatch]);
-
-  const getNickName = useSelector(state => state.profile.profile_user.nickname);
-  const getEmail = useSelector(state => state.profile.profile_user.email);
-  const getAge = useSelector(state => state.profile.profile_user.age);
-  const getPhone = useSelector(state => state.profile.profile_user.phone);
-  const getLevel = useSelector(state => state.profile.profile_user.level);
-  const getActivity = useSelector(state => state.profile.profile_user.activity);
-  const getMyUid = useSelector(state => state.user.uid);
-  const getFriends = useSelector(state => state.profile.profile_user.friends);
-  const getRequests = useSelector(state => state.profile.profile_user.requests);
-
-  try {
-    //setAreFriends(getFriends.includes(getMyUid));
-    //setIsPending(getRequests.includes(getMyUid));
-    //Checkear como hacer mejor esto (RESELECT)
-    setAreFriends(checkAreFriends);
-    setIsPending(checkIsPending);
-  } catch (err) {
-    console.log(err);
-  }
 
   const calcWidth = () => {
     if (isMobile) {
@@ -171,20 +166,7 @@ export default function Profile() {
   };
 
   const friendSystem = () => {
-    console.log(
-      'areFriends: ',
-      areFriends,
-      ' PENDING: ',
-      isPending,
-      ' id: ',
-      id,
-      ' getMyUid',
-      getMyUid,
-      ' friends: ',
-      getFriends,
-      ' requests: ',
-      getRequests
-    ); //debugger
+    
     if (areFriends) {
       return (
         <Button icon='user-delete' onClick={removeFriend}>
@@ -217,7 +199,7 @@ export default function Profile() {
     </div>
   );
 
-  const showStatus = () => {
+  const showStatus = () => { // sacar el badge y probar grilla
     // y porque esto renderiza uno encima de otro
     let isOnline = moment(getActivity).isBetween(
       moment().subtract(5, 'minutes'),
@@ -254,6 +236,21 @@ export default function Profile() {
       </React.Fragment>
     );
   };
+
+  const debugthis = () => console.log(
+    'areFriends: ',
+    areFriends,
+    ' PENDING: ',
+    isPending,
+    ' id: ',
+    id,
+    ' getMyUid',
+    getMyUid,
+    ' friends: ',
+    getFriends,
+    ' requests: ',
+    getRequests
+  ); //debugger
 
   if (redirectHome) return <Redirect to='/' />;
 
