@@ -20,6 +20,7 @@ const { Option } = Select;
 const config = {
   rules: [{ type: 'object', required: true, message: 'Please select time!' }]
 };
+import {isPlaying} from '../actions';
 
 class Register extends React.Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class Register extends React.Component {
   };
 
   componentDidMount() {
-    this.props.dispatch({ type: 'PLAYING', payload: false });
+    this.props.dispatch(isPlaying(false));
   }
 
   fetchCountry = value => {

@@ -8,6 +8,7 @@ import MenuTop from './components/MenuTop';
 import firebase from 'firebase';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import {isMobile} from '../actions';
 const { Content } = Layout;
 
 // Your web app's Firebase configuration
@@ -26,9 +27,8 @@ firebase.initializeApp(firebaseConfig);
 
 function App() {
   const dispatch = useDispatch();
-  const isMobile = window.innerWidth < 1024;
   const isPlaying = useSelector(state => state.app.isPlaying);
-  dispatch({ type: 'MOBILE', payload: isMobile });
+  dispatch(isMobile(window.innerWidth < 1024));
 
   const back_color = isPlaying => {
     if (isPlaying) {

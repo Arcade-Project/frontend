@@ -3,12 +3,13 @@ import { Typography, Card, List, Avatar, Spin, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import {isPlaying} from '../actions';
 
 export default function Notifications() {
   const dispatch = useDispatch();
   const getUid = useSelector(state=> state.user.uid);
   const isMobile = useSelector(state=> state.app.isMobile);
-  dispatch({ type: 'PLAYING', payload: false });
+  dispatch(isPlaying(false));
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [refresh, setRefresh] = useState([false]);

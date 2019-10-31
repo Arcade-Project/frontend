@@ -17,6 +17,7 @@ import firebase from 'firebase';
 import { Redirect, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {checkAreFriends, checkIsPending} from '../selectors/index';
+import { isAuthenticated, isPlaying, setProfile, addVisited } from '../actions';
 
 export default function Profile() {
   const calculateLevel = experience => Math.floor(experience / 50);
@@ -24,7 +25,7 @@ export default function Profile() {
     (experience / 50 - calculateLevel(experience)) * 100;
 
   const dispatch = useDispatch();
-  dispatch({ type: 'PLAYING', payload: false });
+  dispatch(isPlaying(false));
   const { id } = useParams();
   const [redirectHome, setRedirectHome] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -68,24 +69,15 @@ export default function Profile() {
           await axios
             .post('/user/profile', { id })
             .then(res => {
-              dispatch({
-                type: 'PROFILE_USER',
-                payload: res.data
-              });
+              dispatch(setProfile(res.data));
               setLoading(false);
-              dispatch({
-                type: 'ADD_VISITED_PROFILE',
-                payload: res.data
-              });
+              dispatch(addVisited(res.data));
             })
             .catch(err => console.log(err, 'error fetch profile'));
         }
       } else {
         console.log('Entraste a tu perfil');
-        dispatch({
-          type: 'PROFILE_USER',
-          payload: user
-        });
+        dispatch(setProfile(user));
         setLoading(false);
       }
     };
@@ -131,10 +123,7 @@ export default function Profile() {
       .signOut()
       .then(function() {
         // Sign-out successful.
-        dispatch({
-          type: 'AUTHENTICATION',
-          payload: false
-        });
+        dispatch(isAuthenticated(false));
         sessionStorage.clear();
         setRedirectHome(true);
       })

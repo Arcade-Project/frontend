@@ -4,10 +4,11 @@ import { useDispatch } from 'react-redux';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
+import {isPlaying} from '../actions';
 
 export default function Scoreboard() {
   const dispatch = useDispatch();
-  dispatch({ type: 'PLAYING', payload: false });
+  dispatch(isPlaying(false));
   
   const { Option } = Select;
 

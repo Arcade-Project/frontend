@@ -3,6 +3,7 @@ import { Card, List, Avatar, Typography, Badge } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import {isPlaying} from '../actions';
 
 export default function Players() {
   const dummyData = [
@@ -23,7 +24,7 @@ export default function Players() {
   const [users, setUsers] = useState(dummyData);
   const dispatch = useDispatch();
   const getUid = useSelector(state => state.user.uid);
-  dispatch({ type: 'PLAYING', payload: false });
+  dispatch(isPlaying(false));
 
   useEffect(() => {
     axios.post('/user/players',{category,id: getUid}, {timeout: 10000}).then(res =>
