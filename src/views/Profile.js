@@ -38,9 +38,6 @@ export default function Profile() {
   const getLevel = useSelector(state => state.profile.profile_user.level);
   const getActivity = useSelector(state => state.profile.profile_user.activity);
   const getMyUid = useSelector(state => state.user.uid);
-
-  const getFriends = useSelector(state => state.profile.profile_user.friends);
-  const getRequests = useSelector(state => state.profile.profile_user.requests);
   
   const checkFriend = useSelector(checkAreFriends);
   const checkPending = useSelector(checkIsPending);
@@ -226,7 +223,7 @@ export default function Profile() {
     );
   };
 
-  const debugthis = () => console.log(
+/*   const debugthis = () => console.log(
     'areFriends: ',
     areFriends,
     ' PENDING: ',
@@ -239,7 +236,7 @@ export default function Profile() {
     getFriends,
     ' requests: ',
     getRequests
-  ); //debugger
+  ); //debugger */
 
   if (redirectHome) return <Redirect to='/' />;
 

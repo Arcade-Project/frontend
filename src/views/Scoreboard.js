@@ -9,6 +9,7 @@ import {isPlaying} from '../actions';
 export default function Scoreboard() {
   const dispatch = useDispatch();
   dispatch(isPlaying(false));
+  const [isAll, setIsAll] = useState(true);
   
   const { Option } = Select;
 
@@ -25,7 +26,7 @@ export default function Scoreboard() {
     }
   ];
 
-  const games = ['Pong', 'HangMan', 'HeadSoccer'];
+  const games = ['All', 'Pong', 'HangMan', 'HeadSoccer'];
 
   const [scores, setScores] = useState(dummy);
 
@@ -33,7 +34,32 @@ export default function Scoreboard() {
           axios.get('/score/high', {timeout: 100000})
           .then(res => setScores(res.data))
           .catch(err => console.log('error get score', err))
-  },[])
+  },[]);
+
+  const allColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text, item) => (<Link to={`profile/${item.uid}`}>{text}</Link>),
+    },
+    {
+      title: 'Score',
+      dataIndex: 'score',
+      key: 'score'
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
+      render: (text) => moment(text).fromNow()
+    },
+    {
+      title: 'Game',
+      dataIndex: 'game',
+      key: 'game',
+    },
+  ];
 
   const columns = [
     {
@@ -56,19 +82,31 @@ export default function Scoreboard() {
   ];
 
   const onGameChange = e => {
-    axios.post('/score/from_game', {game: e}, {timeout: 10000})
+    if (e === 'All'){
+      setIsAll(true);
+      axios.get('/score/high', {timeout: 100000})
           .then(res => setScores(res.data))
           .catch(err => console.log('error get score', err))
+    }else{
+      setIsAll(false);
+      axios.post('/score/from_game', {game: e}, {timeout: 10000})
+          .then(res => setScores(res.data))
+          .catch(err => console.log('error get score', err))
+    }
+    
   };
 
+ 
+
+  console.log(scores)
   return (
     <React.Fragment>
-      <Card className='centered-div' style={{ width: '80vw', maxHeight: '100%', overflow: 'auto' }}>
-      <Select defaultValue="" style={{ width: 120 }} onChange={onGameChange}>
-      {games.map((game, index) => <Option ref={index} value={game}>{game}</Option>)}
-    </Select>
-        <Table dataSource={scores} columns={columns} style={{maxHeight: '100%', overflow: 'auto'}}/>
-      </Card>
-    </React.Fragment>
+    <Card className='centered-div' style={{ width: '80vw', maxHeight: '100%', overflow: 'auto' }}>
+    <Select defaultValue="All" style={{ minWidth: 120 }} onChange={onGameChange}>
+    {games.map((game, index) => <Option ref={index} value={game}>{game}</Option>)}
+  </Select>
+      <Table dataSource={scores} columns={isAll ? allColumns : columns} style={{maxHeight: '100%', overflow: 'auto'}}/>
+    </Card>
+  </React.Fragment>
   );
 }

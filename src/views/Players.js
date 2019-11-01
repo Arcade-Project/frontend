@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {isPlaying} from '../actions';
+import moment from 'moment';
 
 export default function Players() {
   const dummyData = [
@@ -30,12 +31,13 @@ export default function Players() {
     axios.post('/user/players',{category,id: getUid}, {timeout: 10000}).then(res =>
       setUsers(
         res.data.map(user => {
-          return { uid: user.uid, nickname: user.nickname, level: user.level, color: user.color };
+          return { uid: user.uid, nickname: user.nickname, level: user.level, color: user.color, lastScore: user.lastScore};
         })
       )
     );
   }, [category, getUid]);
   
+  console.log(users)
 
   return (
     <React.Fragment>
@@ -63,7 +65,7 @@ export default function Players() {
                   </Badge>
                 }
                 title={<Link to={"/profile/" + item.uid}>{item.nickname}</Link>}
-                description='Got the highest score on'
+                description={item.lastScore ? (`Played ${item.lastScore.game} and got ${item.lastScore.score} points, ${moment(item.lastScore.date).fromNow()}`): ('')}
               />
             </List.Item>
           )}

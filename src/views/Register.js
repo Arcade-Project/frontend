@@ -16,11 +16,12 @@ import {
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import {isPlaying} from '../actions';
 const { Option } = Select;
 const config = {
   rules: [{ type: 'object', required: true, message: 'Please select time!' }]
 };
-import {isPlaying} from '../actions';
+
 
 class Register extends React.Component {
   constructor(props) {
