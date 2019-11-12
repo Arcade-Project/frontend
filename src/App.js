@@ -4,7 +4,6 @@ import { Layout } from 'antd';
 import { BrowserRouter } from 'react-router-dom';
 import Routes from './components/Routes';
 import Sidebar from './components/Sidebar';
-import MenuTop from './components/MenuTop';
 import firebase from 'firebase';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -81,7 +80,7 @@ function App() {
       {update()}
       <BrowserRouter>
         <Layout style={{ minHeight: '100vh' }}>
-          {checkMobile ? <MenuTop /> : <Sidebar />}
+        <Sidebar />
           <Layout>
             <Content
               style={{

@@ -1,41 +1,48 @@
-import Phaser from 'phaser';
-import Palletes from '../gameObjects/Palletes';
+import Phaser from "phaser";
+import Palletes from "../gameObjects/Palletes";
 
 export default class Pong extends Phaser.Scene {
   constructor() {
-    super({ key: 'Pong' });
+    super({ key: "Pong" });
     this.scoreHub = {};
     this.store = {
       left: 0,
-      right: 0,
-    }
+      right: 0
+    };
+
   }
 
   preload() {
-    this.load.image('ball', 'assets/Pong/ball.png');
-    this.load.image('left', 'assets/Pong/left_pallete.png');
-    this.load.image('right', 'assets/Pong/right_pallete.png');
-    this.load.image('separator', 'assets/Pong/separator.png');
-    this.load.audio('hit1', 'assets/Pong/hit1.ogg');
-    this.load.audio('hit2', 'assets/Pong/hit2.ogg');
-    this.load.audio('point', 'assets/Pong/point.ogg');
+    this.load.image("ball", "assets/Pong/ball.png");
+    this.load.image("left", "assets/Pong/left_pallete.png");
+    this.load.image("right", "assets/Pong/right_pallete.png");
+    this.load.image("separator", "assets/Pong/separator.png");
+    this.load.audio("hit1", "assets/Pong/hit1.ogg");
+    this.load.audio("hit2", "assets/Pong/hit2.ogg");
+    this.load.audio("point", "assets/Pong/point.ogg");
+    var url;
+    url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/plugins/dist/rexvirtualjoystickplugin.min.js';
+    this.load.plugin('rexvirtualjoystickplugin', url, true);
   }
+
   create() {
+
+    this.createScore();
     let width = this.sys.game.config.width;
     let height = this.sys.game.config.height;
     let center_width = width / 2;
     let center_heigth = height / 2;
+    const initialLeft = width / 16;
+    const initialRight = width - width / 20;
 
-    this.createScore();
+    this.left = new Palletes(this, initialLeft, center_heigth, "left");
+    this.right = new Palletes(this, initialRight, center_heigth, "right");
+    this.separator = this.add.image(center_width, center_heigth, "separator");
+    this.ball = this.physics.add.image(center_width, center_heigth, "ball");
 
-    this.left = new Palletes(this, 20, center_heigth, 'left');
-    this.right = new Palletes(this, 620, center_heigth, 'right');
-    this.separator = this.add.image(center_width, center_heigth, 'separator');
-    this.ball = this.physics.add.image(center_width, center_heigth, 'ball');
-
-    this.hit1 = this.sound.add('hit1', { loop: false });
-    this.hit2 = this.sound.add('hit2', { loop: false });
-    this.point = this.sound.add('point', { loop: false });
+    this.hit1 = this.sound.add("hit1", { loop: false });
+    this.hit2 = this.sound.add("hit2", { loop: false });
+    this.point = this.sound.add("point", { loop: false });
 
     if (Phaser.Math.Between(-100, 100) > 0) {
       this.ball.setVelocityX(180);
@@ -74,14 +81,71 @@ export default class Pong extends Phaser.Scene {
     this.cursor = this.input.keyboard.createCursorKeys();
 
     this.drawScoreboard();
+
+    //choistick left
+    this.joyStickLeft = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+      x: initialLeft,
+      y: height - height/8,
+      radius: 100,
+      base: this.add.graphics().fillStyle(0x888888,0.2).fillCircle(0, 0, 30),
+      thumb: this.add.graphics().fillStyle(0xcccccc,0.2).fillCircle(0, 0,15),
+      // dir: '8dir',   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+       dir: 'up&down',   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+      // forceMin: 16,
+       enable: true
+  })
+  .on('update', this.joystickLeft, this);
+
+this.joystickLeft();
+
+//choistick right
+this.joyStickRight = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+  x: initialRight,
+  y: height - height/8,
+  radius: 100,
+  base: this.add.graphics().fillStyle(0x888888,0.2).fillCircle(0, 0, 30),
+  thumb: this.add.graphics().fillStyle(0xcccccc,0.2).fillCircle(0, 0,15),
+  // dir: '8dir',   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+   dir: 'up&down',   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+  // forceMin: 16,
+   enable: true
+})
+.on('update', this.joystickRight, this);
+
+this.joystickRight();
   }
+
+  joystickLeft() {
+    var cursorKeys = this.joyStickLeft.createCursorKeys();
+    console.log(cursorKeys)
+    if (cursorKeys.down.isDown) {
+      this.left.body.setVelocityY(300);
+    } else if (cursorKeys.up.isDown) {
+      this.left.body.setVelocityY(-300);
+    } else {
+      this.left.body.setVelocityY(0);
+    }
+}
+
+joystickRight() {
+  var cursorKeys = this.joyStickRight.createCursorKeys();
+  console.log(cursorKeys)
+  if (cursorKeys.down.isDown) {
+    this.right.body.setVelocityY(300);
+  } else if (cursorKeys.up.isDown) {
+    this.right.body.setVelocityY(-300);
+  } else {
+    this.right.body.setVelocityY(0);
+  }
+}
+
 
   createScore() {
     const { left, right } = this.store;
     let width = this.sys.game.config.width;
     let center_width = width / 2;
     this.scoreHub = this.add.text(center_width - 60, 0, `${left} - ${right}`, {
-      color: '#00ff00',
+      color: "#00ff00",
       fontSize: 40
     });
   }
@@ -109,24 +173,24 @@ export default class Pong extends Phaser.Scene {
       this.gameOver();
     } else {
       if (this.ball.x < 0) {
-        console.log('punto para la derecha!!');
+        console.log("punto para la derecha!!");
         this.store.right = this.store.right + 1;
         this.point.play();
         this.drawScoreboard();
-        this.resetBall('left');
+        this.resetBall("left");
       }
       if (this.ball.x > this.sys.game.config.width) {
-        console.log('punto para la izquierda!!');
+        console.log("punto para la izquierda!!");
         this.store.left = this.store.left + 1;
         this.point.play();
         this.drawScoreboard();
-        this.resetBall('right');
+        this.resetBall("right");
       }
     }
   }
 
   gameOver() {
-    this.add.text(50, this.sys.game.config.height / 2, 'Game Over', {
+    this.add.text(50, this.sys.game.config.height / 2, "Game Over", {
       fontSize: 100
     });
     this.left.setVisible(false);
@@ -138,15 +202,18 @@ export default class Pong extends Phaser.Scene {
   }
 
   resetBall(direction) {
-    this.ball.setPosition(
-      this.sys.game.config.width / 2,
-      this.sys.game.config.height / 2
-    );
-    this.right.setPosition(620, this.sys.game.config.height / 2);
-    this.left.setPosition(20, this.sys.game.config.height / 2);
+    let width = this.sys.game.config.width;
+    let height = this.sys.game.config.height;
+    let center_width = width / 2;
+    let center_heigth = height / 2;
+    const initialLeft = width / 16;
+    const initialRight = width - width / 20;
+    this.ball.setPosition(center_width, center_heigth);
+    this.right.setPosition(initialRight, center_heigth);
+    this.left.setPosition(initialLeft, center_heigth);
     this.ball.body.setBounceX(1);
     this.ball.body.setVelocityX(200);
-    if (direction !== 'left') {
+    if (direction !== "left") {
       //this.ball.setVelocityX(Phaser.Math.Between(50,100));
       this.ball.setVelocityY(1);
     } else {

@@ -17,18 +17,26 @@ export default class HeadSoccer extends Phaser.Scene {
     this.load.image('background', 'assets/HeadSoccer/background.jpg');
     this.load.audio('goal', 'assets/HeadSoccer/goal.mp3');
     this.load.audio('endgame', 'assets/HeadSoccer/endgame.wav');
+    var url;
+    url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/plugins/dist/rexvirtualjoystickplugin.min.js';
+    this.load.plugin('rexvirtualjoystickplugin', url, true);
   }
 
   create() {
+    let width = this.sys.game.config.width;
+    let height = this.sys.game.config.height;
+    let initialLeft = width/16;
+    let initialRight = width - width/16;
+
     this.goal = this.sound.add('goal', { loop: false });
     this.endgame = this.sound.add('endgame', { loop: false });
     this.background = this.add.image(0, 0, 'background');
-    this.background.displayHeight = 800;
-    this.background.displayWidth = 2000;
+    this.background.displayHeight = height*2;
+    this.background.displayWidth = width*2;
     this.createScore();
 
-    this.playerLeft = this.physics.add.sprite(50, 750, 'playerLeft');
-    this.playerRight = this.physics.add.sprite(750, 750, 'playerRight');
+    this.playerLeft = this.physics.add.sprite(initialLeft, 750, 'playerLeft');
+    this.playerRight = this.physics.add.sprite(initialRight, 750, 'playerRight');
 
     this.ball = this.physics.add.image(200, 100, 'ball');
 
@@ -84,7 +92,41 @@ export default class HeadSoccer extends Phaser.Scene {
 
     // RightPlayer
     this.cursor = this.input.keyboard.createCursorKeys();
+
+    //choistick left
+    this.joyStickLeft = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+      x: initialLeft,
+      y: height - height/8,
+      radius: 100,
+      base: this.add.graphics().fillStyle(0x888888,0.2).fillCircle(0, 0, 30),
+      thumb: this.add.graphics().fillStyle(0xcccccc,0.2).fillCircle(0, 0,15),
+      // dir: '8dir',   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+       dir: 2,   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+      // forceMin: 16,
+       enable: true
+  })
+  .on('update', this.joystickLeft, this);
+
+this.joystickLeft();
+
+//choistick Right
+this.joyStickRight = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+  x: initialRight,
+  y: height - height/8,
+  radius: 100,
+  base: this.add.graphics().fillStyle(0x888888,0.2).fillCircle(0, 0, 30),
+  thumb: this.add.graphics().fillStyle(0xcccccc,0.2).fillCircle(0, 0,15),
+  // dir: '8dir',   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+   dir: 2,   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+  // forceMin: 16,
+   enable: true
+})
+.on('update', this.joystickRight, this);
+
+this.joystickRight();
   }
+
+
 
   update() {
     this.scoreboard();
@@ -129,24 +171,34 @@ export default class HeadSoccer extends Phaser.Scene {
   }
 
   gameOver() {
-    this.add.text(150, 100, 'Game Over', {
+    let width = this.sys.game.config.width;
+    const center_width = (screen) => {
+      if (screen > 600) return width / 6;
+      return width/64;
+    }
+    this.add.text(center_width(width), 100, 'Game Over', {
       fontSize: 100
     });
     this.endgame.play();
     this.playerLeft.setVisible(false);
     this.playerRight.setVisible(false);
     this.ball.setVisible(false);
+    this.ball.destroy(true);
     this.store.right = 0;
     this.store.left = 0;
   }
 
   resetBall(direction) {
+    let width = this.sys.game.config.width;
+    let height = this.sys.game.config.height;
+    let initialLeft = width/16;
+    let initialRigth = width - width/16;
     this.ball.setPosition(
-      this.sys.game.config.width / 2,
-      this.sys.game.config.height / 2
+      width / 2,
+      height / 2
     );
-    this.playerLeft.setPosition(50, 300);
-    this.playerRight.setPosition(750, 300);
+    this.playerLeft.setPosition(initialLeft, 750);
+    this.playerRight.setPosition(initialRigth, 750);
     this.ball.body.setBounceX(1);
     this.ball.body.setVelocityX(200);
     if (direction !== 'left') {
@@ -175,6 +227,25 @@ export default class HeadSoccer extends Phaser.Scene {
     }
   }
 
+  joystickRight() {
+    //Controller Right
+    var cursorKeys = this.joyStickRight.createCursorKeys();
+    if (cursorKeys.down.isDown) {
+      this.playerRight.body.setVelocityY(300);
+    } else if (cursorKeys.up.isDown && this.playerRight.body.y > 200) {
+      this.playerRight.body.setAccelerationY(5000);
+      this.playerRight.body.setVelocityY(-300);
+    } else if (cursorKeys.left.isDown) {
+      this.playerRight.body.setVelocityX(-300);
+    } else if (cursorKeys.right.isDown) {
+      this.playerRight.body.setVelocityX(300);
+    } else {
+      this.playerRight.body.setVelocityY(0);
+      this.playerRight.body.setVelocityX(0);
+    }
+  }
+
+
   leftController() {
     //Controller left
     if (this.cursor_S.isDown) {
@@ -185,6 +256,23 @@ export default class HeadSoccer extends Phaser.Scene {
     } else if (this.cursor_A.isDown) {
       this.playerLeft.body.setVelocityX(-300);
     } else if (this.cursor_D.isDown) {
+      this.playerLeft.body.setVelocityX(300);
+    } else {
+      this.playerLeft.body.setVelocityY(0);
+      this.playerLeft.body.setVelocityX(0);
+    }
+  }
+  joystickLeft() {
+    //Controller left
+    var cursorKeys = this.joyStickLeft.createCursorKeys();
+    if (cursorKeys.down.isDown) {
+      this.playerLeft.body.setVelocityY(300);
+    } else if (cursorKeys.up.isDown && this.playerLeft.body.y > 200) {
+      this.playerLeft.body.setVelocityY(-500);
+      this.playerLeft.body.setAccelerationY(5000);
+    } else if (cursorKeys.left.isDown) {
+      this.playerLeft.body.setVelocityX(-300);
+    } else if (cursorKeys.right.isDown) {
       this.playerLeft.body.setVelocityX(300);
     } else {
       this.playerLeft.body.setVelocityY(0);
