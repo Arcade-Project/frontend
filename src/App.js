@@ -12,14 +12,22 @@ const { Content } = Layout;
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
-  apiKey: process.env.REACT_APP_APIKEY,
+  apiKey: "AIzaSyBOcqwcoBteiasryCbwHx8RKkrQoP9IVTs",
+  authDomain: "user-managment12.firebaseapp.com",
+  databaseURL: "https://user-managment12.firebaseio.com",
+  projectId: "user-managment12",
+  storageBucket: "user-managment12.appspot.com",
+  messagingSenderId: "376226296141",
+  appId: "1:376226296141:web:cda0e17f47d476aa024704",
+  measurementId: "G-CEHJ9EQWVR"
+  /* apiKey: process.env.REACT_APP_APIKEY,
   authDomain: process.env.REACT_APP_AUTHDOMAIN,
   databaseURL: process.env.REACT_APP_DATABASEURL,
   projectId: process.env.REACT_APP_PROJECTID,
   storageBucket: process.env.REACT_APP_STORAGEBUCKET,
   messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
   appId: process.env.REACT_APP_APPID,
-  measurementId: process.env.REACT_APP_MEASUREMENTID
+  measurementId: process.env.REACT_APP_MEASUREMENTID */
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
